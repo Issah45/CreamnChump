@@ -1,6 +1,8 @@
 from issgraph import *
 import sys, random
 
+Utils.init()
+
 screen = Graphics(800, 600)
 
 _img = Img.img("token.png")
@@ -11,9 +13,11 @@ class Player:
     y = 50
     c_delay = 50
     img = Img.scale(_img, 50, 50)
+    chumps = 0
 
 chumps = []
 chump_img = Img.scale(_img, 32, 32)
+chump_font = Utils.font(None, 32)
 
 #class
 player = Player()
@@ -21,15 +25,20 @@ player = Player()
 while True:
     for e in screen.game():
         if e.type == screen.shouldClose(): sys.exit()
+    
+    #Setup
     screen.title("Cream n Chump")
     screen.paint(200, 200, 255)
     screen.image(player.img, player.x, player.y)
     
+    #Chump Displaying
     for chump in chumps:
         screen.image(chump_img, chump[0], chump[1])
         if Utils.collide(player.x, player.y, chump[0], chump[1], 40):
             chumps.remove(chump)
+            player.chumps += 1
     
+    #Player Movement
     if Utils.keys(Utils.KEYS["right"]):
         player.x += player.speed
     if Utils.keys(Utils.KEYS["left"]):
@@ -39,6 +48,7 @@ while True:
     if Utils.keys(Utils.KEYS["down"]):
         player.y += player.speed
     
+    #Chump Spawning
     player.c_delay -= 1
     
     if player.c_delay < 1:
