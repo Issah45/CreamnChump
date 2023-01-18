@@ -4,44 +4,45 @@ import sys, random
 screen = Graphics(800, 600)
 
 _img = Img.img("token.png")
-img = Img.scale(_img, 50, 50)
 
-c_delay = 50
+class Player:
+    speed = 0.4
+    x = 50
+    y = 50
+    c_delay = 50
+    img = Img.scale(_img, 50, 50)
 
-speed = 0.4
-x = 50
-y = 50
+chumps = []
+chump_img = Img.scale(_img, 32, 32)
 
-coins = []
-coins.append([140, 180])
-coins.append([500, 410])
-coin_img = Img.scale(_img, 32, 32)
+#class
+player = Player()
 
 while True:
     for e in screen.game():
         if e.type == screen.shouldClose(): sys.exit()
     screen.title("Cream n Chump")
     screen.paint(200, 200, 255)
-    screen.image(img, x, y)
+    screen.image(player.img, player.x, player.y)
     
-    for coin in coins:
-        screen.image(coin_img, coin[0], coin[1])
-        if Utils.collide(x, y, coin[0], coin[1], 40):
-            coins.remove(coin)
+    for chump in chumps:
+        screen.image(chump_img, chump[0], chump[1])
+        if Utils.collide(player.x, player.y, chump[0], chump[1], 40):
+            chumps.remove(chump)
     
     if Utils.keys(Utils.KEYS["right"]):
-        x += speed
+        player.x += player.speed
     if Utils.keys(Utils.KEYS["left"]):
-        x -= speed
+        player.x -= player.speed
     if Utils.keys(Utils.KEYS["up"]):
-        y -= speed
+        player.y -= player.speed
     if Utils.keys(Utils.KEYS["down"]):
-        y += speed
+        player.y += player.speed
     
-    c_delay -= 1
+    player.c_delay -= 1
     
-    if c_delay < 1:
-        coins.append([random.randrange(0, 800), random.randrange(0, 600)])
-        c_delay = random.randrange(0, 1000)
+    if player.c_delay < 1:
+        chumps.append([random.randrange(0, 800), random.randrange(0, 600)])
+        player.c_delay = random.randrange(0, 1000)
     
     screen.update()
